@@ -25,6 +25,8 @@
               Moves: {{moves}} 
               <br>
               Score: {{score}} 
+              <br>
+              Highest Score: {{highestScore}} 
             </p>
           </div>
 
@@ -51,7 +53,8 @@ export default {
   props: {
     gameTime: Object,
     moves: Number,
-    score: Number
+    score: Number,
+    highestScore: Number
   },
 
   created () {

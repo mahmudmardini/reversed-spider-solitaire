@@ -25,6 +25,7 @@
       :gameTime="time"
       :moves="moves"
       :score="score"
+      :highestScore="highestScore"
       @close="showWinModal = false"
       @newGame="clearData(); createCards()"
     />
@@ -83,6 +84,7 @@ export default {
       selectedCards: [],
       selectedLevel: 1,
       sortedSuits: 0,
+      sortedSuitPoints: 65,
       sortedSuitSymbols: 0,
       symbolsInCard: 2,
       pilesToSort: 8,
@@ -93,6 +95,7 @@ export default {
         hours: '00',
       },
       score: 0,
+      highestScore: 0,
       moves: 0,
       showStartModal: true,
       showWinModal: false
@@ -264,7 +267,7 @@ export default {
         }
 
         this.sortedSuits++
-        this.score = 65 * this.sortedSuits * this.selectedLevel
+        this.score += this.sortedSuitPoints * this.selectedLevel
 
         // show sorted pile card
         let sortedPileCard = document.querySelectorAll('.sorted-pile-card')[this.sortedSuits - 1]
@@ -382,6 +385,11 @@ export default {
       if(this.time.seconds === 60) {
         this.time.minutes++
         this.time.seconds = '00'
+
+        // reduce score
+        if(this.score > 0){
+          this.score = this.score - 6
+        }
       }
       // increase hours
       if(this.time.minutes === 60) {
@@ -422,8 +430,9 @@ export default {
     checkWin () {
       // check if all cards has sorted
       if (this.sortedSuits === this.pilesToSort) {
-        this.showWinModal = true
-        this.stopTimer()
+        this.showWinModal = true // show win modal
+        this.stopTimer() //stop timer
+        this.highestScore = this.score > this.highestScore ? this.score : this.highestScore
       }
     }
   },
