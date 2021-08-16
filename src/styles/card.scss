@@ -1,0 +1,132 @@
+  .flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100px;
+    height: 150px;
+    margin: 5px;
+  }
+
+  .flipper-wrap {
+    position: relative;
+    perspective: 1000;
+
+    &--reversed .flipper {
+      transform: rotateY(180deg);
+      margin: -13px 5px;
+    }
+  }
+
+  .card {
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100px;
+    height: 150px;
+    border: 2px solid grey;
+    border-radius: 10px;
+    vertical-align: center;
+    font-size: 20px;
+
+    &__front {
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    &__back {
+      transform: rotateY(180deg);
+      // I used inline style to fix production deployment bug
+      // background: url('/../../../images/card.jpeg') no-repeat; 
+      background-size: 100% 100%;
+    }
+
+    &--selected {
+      border-color: #b70000;
+      box-shadow: 0 0.2vw 0.5vw -0.2vw rgba(45, 0, 55, 0.5);
+      transform: scale(1.05);
+      transition: transform 250ms ease-out;
+    }
+
+    &--empty{
+      background-color: #eee;
+    }
+  }
+  .symbol {
+
+    &--small{
+      position: absolute;
+      width: 24px;
+    }
+
+    &--up{
+      top: 5px;
+      right: 5px;
+    }
+
+    &--down{
+      bottom: 5px;
+      left: 5px;
+    }
+  }
+  .name {
+    position: absolute;
+    font-size: 25px;
+    font-weight: bold;
+    &--up {
+      top: 3px;
+      left: 5px;
+    }
+    &--down {
+      bottom: 3px;
+      right: 5px;
+      transform: rotate(180deg);
+    }
+
+    &--big{
+    font-size: 50px;
+    font-weight: bold;
+    }
+  }
+
+  @media (max-width: 1155px) {
+    .flipper {
+      width: 80px;
+      height: 120px;
+      margin: 3px;
+    }
+
+    .card {
+      width: 80px;
+      height: 120px;
+    }
+
+    .flipper-wrap--reversed .flipper {
+      margin: -13px 3px;
+    }
+  }
+
+  @media (max-width: 889px) {
+    .flipper, .card {
+      width: 60px;
+      height: 90px;
+    }
+    
+    .name{
+      &--big{
+        font-size: 30px;
+      }
+      &--up, &--down{
+        font-size: 15px;
+      }
+    }
+
+    .symbol--small{
+      position: absolute;
+      width: 15px;
+    }
+  }

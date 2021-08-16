@@ -1,0 +1,40 @@
+.toprow {
+    display: flex;
+    flex-direction: row;
+    
+    // add cards
+    .cards-to-add {
+        display: flex;
+        width: 38vw;
+    
+        .card {
+            margin-left: -8vw;
+            cursor: pointer;
+        }
+    
+        .flipper {
+            width: 7vw;
+        }
+    }
+
+
+    // sorted piles
+    .sorted-piles {
+        display: flex;
+        justify-content: space-between;
+        margin:  0 0 1vw -15vw;
+  
+        .sorted-pile {
+            background-image: linear-gradient(196deg, #0e5e9d 45%, #0985c5 78%);
+            box-shadow: 0 0 0.4vw 0;
+            display: inline-block;
+            margin: 15px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            
+            .sorted-pile-card{
+                visibility: hidden;
+            }
+        }
+    }
+}
