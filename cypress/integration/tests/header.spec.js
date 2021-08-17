@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const REVERSED_SPIDER_SOLITAIRE_URL = 'https://radiant-spire-02907.herokuapp.com/';
+const REVERSED_SPIDER_SOLITAIRE_URL = 'https://reversed-spider-solitaire-game.herokuapp.com/';
 
 describe('header-tests', () => {
 
