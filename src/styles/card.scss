@@ -41,7 +41,7 @@
     &__back {
       transform: rotateY(180deg);
       // I used inline style to fix production deployment bug
-      // background: url('/../../../images/card.jpeg') no-repeat; 
+      // background: url('~/images/card.jpeg') no-repeat; 
       background-size: 100% 100%;
     }
 
