@@ -1,10 +1,11 @@
 <template lang="html">
-  <div class="flipper-wrap" :class="{ 'flipper-wrap--reversed': card.reversed }">
+  <div class="flipper-wrap" :class="{ 'flipper-wrap--reversed': card.reversed, 'flipper-wrap--opened': !card.reversed }">
     <div class="flipper">
 
       <div
         class="card card__front"
-        :class="{ 'card--selected': card.selected, 'card--empty': card.empty }">
+        :class="{ 'card--selected': card.selected, 'card--empty': card.empty }"
+      >
         <span class="name name--up" :class="suit">
           {{ name }}
         </span>
