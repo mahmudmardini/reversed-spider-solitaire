@@ -323,61 +323,65 @@ export default {
           }
 
       } else { // if there is selected card
-
+        
         // deselect card if click on earlier selected card
         if (card.selected) {
           this.deselectCards()
           return false
         }
 
-        const targetPile = this.piles[card.pile]
-        const selectedPile = this.piles[this.selectedCards[0].pile]
-
-        const lastCardInTargetPile = targetPile[targetPile.length - 1]; 
-
-        // check last card in target pile
-        if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) { 
-          this.deselectCards()
-          this.onCardSelect (card)
-          return false
-        }
-
-        // set selected card index in its pile
-        const indexFrom = selectedPile.findIndex(cardInPile => {
-          return cardInPile.id === this.selectedCards[0].id
-        })
-
-        // remove empty card if it was exist
-        if (targetPile[0].empty === true) {
-          targetPile.pop()
-        }
-
-        // move cards
-        const movingCards = selectedPile.splice(indexFrom)
-        movingCards.forEach(movingCard => movingCard.pile = card.pile)
-        targetPile.push(...movingCards)
-
-        this.checkSortedSuit(targetPile)
-
-        this.deselectCards()
-
-        // reverse last card in the pile
-        if (selectedPile.length > 0) {
-          selectedPile[selectedPile.length - 1].reversed = false
-        }
-        else { // if moved card was the last one on the pile
-          this.createEmptyCard(selectedPile)
-        }
-
-        // increase moves
-        this.moves++;
-
-        // play move audio
-        let moveSound = new Audio('audio/move.mp3');
-				moveSound.play();
-
+        this.moveCards(card)
       }
 
+    },
+
+    moveCards(card){
+
+      const targetPile = this.piles[card.pile]
+      const selectedPile = this.piles[this.selectedCards[0].pile]
+
+      const lastCardInTargetPile = targetPile[targetPile.length - 1]; 
+
+      // check last card in target pile
+      if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) { 
+        this.deselectCards()
+        this.onCardSelect (card)
+        return false
+      }
+
+      // set selected card index in its pile
+      const indexFrom = selectedPile.findIndex(cardInPile => {
+        return cardInPile.id === this.selectedCards[0].id
+      })
+
+      // remove empty card if it was exist
+      if (targetPile[0].empty === true) {
+        targetPile.pop()
+      }
+
+      // move cards
+      const movingCards = selectedPile.splice(indexFrom)
+      movingCards.forEach(movingCard => movingCard.pile = card.pile)
+      targetPile.push(...movingCards)
+
+      this.checkSortedSuit(targetPile)
+
+      this.deselectCards()
+
+      // reverse last card in the pile
+      if (selectedPile.length > 0) {
+        selectedPile[selectedPile.length - 1].reversed = false
+      }
+      else { // if moved card was the last one on the pile
+        this.createEmptyCard(selectedPile)
+      }
+
+      // increase moves
+      this.moves++;
+
+      // play move audio
+      let moveSound = new Audio('audio/move.mp3');
+			moveSound.play();
     },
 
     startTimer() {  
