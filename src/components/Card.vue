@@ -5,7 +5,7 @@
       <div
         class="card card__front"
         :class="{ 'card--selected': card.selected, 'card--empty': card.empty }">
-        <span class="name name--up">
+        <span class="name name--up" :class="suit">
           {{ name }}
         </span>
         
