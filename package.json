@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "main": "App.vue",
@@ -37,17 +37,6 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
     ]
   },
   "postcss": {
@@ -60,18 +49,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      "^.+\\.js$": "babel-jest",
-      "^.+\\.vue$": "vue-jest"
-    },
-    "preset": "@vue/cli-plugin-unit-jest"
-  },
   "homepage": "https://reversed-spider-solitaire-game.herokuapp.com/",
   "license": "MIT"
 }
