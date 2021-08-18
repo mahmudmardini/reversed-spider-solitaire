@@ -25,8 +25,7 @@ export default {
   
   name: "AddCards",
 
-  props:
-   {
+  props: {
     cards: Array,
     piles: Array
   },

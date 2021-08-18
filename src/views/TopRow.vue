@@ -32,23 +32,19 @@ import '@/styles/topRow.scss'
 
 export default {
 
-    props:
-    {
+    props: {
         cards: Array,
         piles: Array
     },
     
     components: {
-      AddCards
+        AddCards
     },
 
     methods: {
-
         checkSortedSuit(){
             this.$emit('checkSortedSuit', 'pile')
-        },
-
-
+        }
     }
 
 }
