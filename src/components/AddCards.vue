@@ -43,22 +43,15 @@ export default {
     },
 
     addCards () {
-      if (this.cards.length === 0) {
-        return
-      }
+      try {
+
+      if (this.cards.length === 0) throw 'There is no cards to add.'
 
       // check if an empty pile exists
       const isEmptyCard = this.piles.some(pile => pile[0].empty)
 
-      // show warinig message using vue toasted library
-      if (isEmptyCard) {
-          this.$toasted.show("Cannot send cards to an empty pile, please fill all piles and try again.", { 
-            theme: "toasted-primary", 
-            position: "top-right", 
-            duration : 5000
-          })
-        return
-      }
+      // catch error and show warinig message using vue toasted library
+      if(isEmptyCard) throw 'Cannot send cards to an empty pile, please fill all piles and try again.'
 
       // deal cards to each pile 
       this.piles.forEach((pile, pileIndex) => {
@@ -75,6 +68,17 @@ export default {
       // play card sound
       let cardSound = new Audio('audio/card.mp3')
       cardSound.play()    
+
+      } catch (err) {
+          this.$toasted.show(err, { 
+            theme: "toasted-primary", 
+            position: "top-right", 
+            duration : 5000
+          })
+          // eslint-disable-next-line
+          console.log('a new error catched: ' + err)
+        return
+      }
     },
 
   }

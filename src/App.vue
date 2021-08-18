@@ -90,9 +90,9 @@ export default {
       pilesToSort: 8,
       cardsInSuit: 13,
       time: {
-        seconds: '00',
-        minutes: '00',
         hours: '00',
+        minutes: '15',
+        seconds: '30'
       },
       score: 0,
       highestScore: 0,
