@@ -39,14 +39,16 @@
     />
 
     <Actions
-      @restart="clearData(); createCards();"
-
       :startModalValue="showStartModal" @setStartModal="showStartModal = $event"
+      @restart="clearData(); createCards();"
+      @hint="hint()"
     />
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+
 import _ from 'lodash'
 
 // import components
@@ -82,6 +84,9 @@ export default {
       cards: [],
       suits: ['spade', 'heart', 'club', 'diamond'],
       selectedCards: [],
+      movableCards: [],
+      possibleMoves: [],
+      hintIterator: 0,
       selectedLevel: 1,
       sortedSuits: 0,
       sortedSuitPoints: 65,
@@ -94,8 +99,8 @@ export default {
         minutes: '15',
         seconds: '30'
       },
-      score: 0,
-      highestScore: 0,
+      score: 500,
+      highestScore: 500,
       moves: 0,
       showStartModal: true,
       showWinModal: false
@@ -148,7 +153,7 @@ export default {
         pile[lastIndex].reversed = false
       })
 
-    // start timer 
+    // start the timer 
     this.startTimer()
     },
 
@@ -157,10 +162,13 @@ export default {
       this.cards = []
       this.sortedSuits = 0
       this.sortedSuitSymbols = 0
-      this.score = 0
+      this.score = 500
       this.moves = 0
       this.resetTimer()
-
+      this.movableCards = []
+      this.possibleMoves = []
+      this.hintIterator = 0
+      
       // hide sorted piles cards
       let sortedPileCards = document.querySelectorAll('.sorted-pile-card')
       sortedPileCards.forEach(card => {
@@ -183,14 +191,21 @@ export default {
     },
 
     createEmptyCard (pile) {
-      pile.push({
-        pile: this.piles.indexOf(pile),
-        empty: true
-      })
+      try {
+        if ( !(pile >= 0 && pile < 10) ) throw 'pile number is out if the range' 
+
+        pile.push({
+          pile: this.piles.indexOf(pile),
+          empty: true
+        })
+
+      } catch (err) {
+        console.log('error: ' + err.message)
+      }
     },
 
     checkCardsToMove (cards) {
-      // move if only one card selected
+      // return true if only one card selected
       if (cards.length === 1) {
         return true
       }
@@ -211,212 +226,234 @@ export default {
 
     // check if cards on pile creating full suit in correct order
     checkSortedSuit (pile) {
-      let pileLength = 0
-      const currentPileValues = []
-      const currentPileSuits = []
+      try {
+        let pileLength = 0
+        const currentPileValues = []
+        const currentPileSuits = []
 
-      // set current pile values and suits
-      pile.forEach(card => {
-        if (!card.reversed) {
-          pileLength++
-          currentPileValues.push(card.value)
-          currentPileSuits.push(card.suit)
-        }
-      })
-      
-      // return false if current sorted pile length is less than 13
-      if (pileLength < this.cardsInSuit) {
-        return false
-      }
-
-      let correctValues = 0
-      // check if cards are in good order
-      for (let i = pileLength - this.cardsInSuit; i < pileLength - 1; i++) {
-        // check sorted cards values
-        if (currentPileValues[i] + 1 === currentPileValues[i + 1]) {
-          correctValues++
-        } else {
-          return false
-        }
-
-      //   // check sorted cards suits
-        if (currentPileSuits[i] !== currentPileSuits[i + 1]){
-          return false
-        }
-      }
-
-      if (correctValues === this.cardsInSuit - 1) { // cards in good order
+        // set current pile values and suits
+        pile.forEach(card => {
+          if (!card.reversed) {
+            pileLength++
+            currentPileValues.push(card.value)
+            currentPileSuits.push(card.suit)
+          }
+        })
         
-        // set sorted pile symbols
-        for(let i = 0; i < this.symbolsInCard; i++){
-          let sortedSuitSymbol = document.querySelectorAll('.sorted-suit-symbol')[this.sortedSuitSymbols]
-          sortedSuitSymbol.src = `images/${currentPileSuits[currentPileSuits.length - 1]}.svg`
-          this.sortedSuitSymbols++
+        // return false if current sorted pile length is less than 13
+        if (pileLength < this.cardsInSuit) {
+          return false
         }
 
-        // remove sorted pile cards
-        pile.splice(- this.cardsInSuit)
+        let correctValues = 0
+        const firstCardIndex = pileLength - this.cardsInSuit
+        // check if target pile cards are in good order
+        for (let i = firstCardIndex; i < pileLength - 1; i++) {
+          // check sorted cards values
+          if (currentPileValues[i] + 1 === currentPileValues[i + 1]) {
+            correctValues++
+          } else {
+            return false
+          }
 
-        // check if any more cards exists in current pile
-        if (pile.length === 0) {
-          this.createEmptyCard (pile)
+          // check sorted cards suits
+          if (currentPileSuits[i] !== currentPileSuits[i + 1]){
+            return false
+          }
         }
 
-        else if (pile[pile.length - 1].reversed === true) {
-          pile[pile.length - 1].reversed = false
+        if (correctValues === this.cardsInSuit - 1) { // cards in good order
+          
+          // set sorted pile symbols
+          for(let i = 0; i < this.symbolsInCard; i++){
+            let sortedSuitSymbol = document.querySelectorAll('.sorted-suit-symbol')[this.sortedSuitSymbols]
+            sortedSuitSymbol.src = `images/${currentPileSuits[currentPileSuits.length - 1]}.svg`
+            this.sortedSuitSymbols++
+          }
+
+          // remove sorted pile cards
+          pile.splice(- this.cardsInSuit)
+
+          // check if any more cards exists in current pile
+          if (pile.length === 0) {
+            this.createEmptyCard (pile)
+          }
+
+          else if (pile[pile.length - 1].reversed === true) {
+            pile[pile.length - 1].reversed = false
+          }
+
+          this.sortedSuits++
+          this.score += this.sortedSuitPoints * this.selectedLevel
+
+          // show sorted pile card
+          let sortedPileCard = document.querySelectorAll('.sorted-pile-card')[this.sortedSuits - 1]
+          sortedPileCard.style.visibility = 'visible'
+
+          // play sorted suit sound
+          let sortedSuitSound = new Audio('audio/sorted-suit.ogg')
+          sortedSuitSound.play();
+
+          this.checkWin()
         }
-
-        this.sortedSuits++
-        this.score += this.sortedSuitPoints * this.selectedLevel
-
-        // show sorted pile card
-        let sortedPileCard = document.querySelectorAll('.sorted-pile-card')[this.sortedSuits - 1]
-        sortedPileCard.style.visibility = 'visible'
-
-        // play sorted suit sound
-        let sortedSuitSound = new Audio('audio/sorted-suit.ogg')
-				sortedSuitSound.play();
-
-        this.checkWin()
+      } catch (err) {
+        console.log('error:  ' + err.message)
       }
 
     },
-    // Select card
+    // select card
     onCardSelect (card) {
-
-      // don't select reversed card
-      if (card.reversed) {
-        this.deselectCards()
-        return false
-      }
-
-      // check if any cards selected before
-      const isAnyCardSelected = this.piles.some(pile => {
-        return pile.some(card => card.selected)
-      })
-
-      // don't select if it's empty and there is no card selected to move
-      if (!isAnyCardSelected && card.empty) {
-        return false
-      }
-
-      if (!isAnyCardSelected) {
-          
-          // set current pile
-          const currentPile = this.piles[card.pile]
-
-          // set card index in pile
-          const cardIndex = currentPile.findIndex(cardInPile => {
-            return cardInPile.id === card.id
-          })
-
-          // check cards to select
-          const cardsOnTop = currentPile.slice(cardIndex)
-          const isCardsSelectCorrect = this.checkCardsToMove(cardsOnTop)
-
-          if (isCardsSelectCorrect) {
-            // select cards
-            cardsOnTop.forEach(card => card.selected = true)
-            this.selectedCards.push(...cardsOnTop)
-          } else {
-            this.deselectCards()
-          }
-
-      } else { // if there is selected card
-        
-        // deselect card if click on earlier selected card
-        if (card.selected) {
+      try {
+        // don't select reversed card
+        if (card.reversed) {
           this.deselectCards()
           return false
         }
 
-        this.moveCards(card)
+        // check if any cards selected before
+        const isAnyCardSelected = this.piles.some(pile => {
+          return pile.some(card => card.selected)
+        })
+
+        // don't select if it's empty and there is no card selected to move
+        if (!isAnyCardSelected && card.empty) {
+          return false
+        }
+
+        if (!isAnyCardSelected) {
+            
+            // set current pile
+            const currentPile = this.piles[card.pile]
+
+            // set card index in pile
+            const cardIndex = currentPile.findIndex(cardInPile => {
+              return cardInPile.id === card.id
+            })
+
+            // check cards to select
+            const cardsOnTop = currentPile.slice(cardIndex)
+            const isCardsSelectCorrect = this.checkCardsToMove(cardsOnTop)
+
+            if (isCardsSelectCorrect) {
+              // select cards
+              cardsOnTop.forEach(card => card.selected = true)
+              this.selectedCards.push(...cardsOnTop)
+            } else {
+              this.deselectCards()
+            }
+
+        } else { // if there is selected card
+          
+          // deselect card if click on earlier selected card
+          if (card.selected) {
+            this.deselectCards()
+            return false
+          }
+
+          this.moveCards(card)
+        }
+      } catch (err) {
+        console.log(err.message)
       }
 
     },
 
     moveCards(card){
+      try {
+        const targetPile = this.piles[card.pile]
+        const selectedPile = this.piles[this.selectedCards[0].pile]
 
-      const targetPile = this.piles[card.pile]
-      const selectedPile = this.piles[this.selectedCards[0].pile]
+        const lastCardInTargetPile = targetPile[targetPile.length - 1]; 
 
-      const lastCardInTargetPile = targetPile[targetPile.length - 1]; 
+        // check last card in target pile
+        if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) { 
+          this.deselectCards()
+          this.onCardSelect (card)
+          return false
+        }
 
-      // check last card in target pile
-      if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) { 
+        // set selected card index in its pile
+        const indexFrom = selectedPile.findIndex(cardInPile => {
+          return cardInPile.id === this.selectedCards[0].id
+        })
+
+        // remove empty card if it was exist
+        if (targetPile[0].empty === true) {
+          targetPile.pop()
+        }
+
+        // move cards
+        const movingCards = selectedPile.splice(indexFrom)
+        movingCards.forEach(movingCard => movingCard.pile = card.pile)
+        targetPile.push(...movingCards)
+
+        this.checkSortedSuit(targetPile)
+
         this.deselectCards()
-        this.onCardSelect (card)
-        return false
+
+        // reverse last card in the pile
+        if (selectedPile.length > 0) {
+          selectedPile[selectedPile.length - 1].reversed = false
+        }
+        else { // if moved card was the last one on the pile
+          this.createEmptyCard(selectedPile)
+        }
+
+        // increase moves
+        this.moves++;
+
+        // reset hint values
+        this.movableCards = []
+        this.possibleMoves = []
+        this.hintIterator = 0
+
+        // play move audio
+        let moveSound = new Audio('audio/move.mp3');
+        moveSound.play();
+      } catch (err) {
+        console.log(err.message);
       }
-
-      // set selected card index in its pile
-      const indexFrom = selectedPile.findIndex(cardInPile => {
-        return cardInPile.id === this.selectedCards[0].id
-      })
-
-      // remove empty card if it was exist
-      if (targetPile[0].empty === true) {
-        targetPile.pop()
-      }
-
-      // move cards
-      const movingCards = selectedPile.splice(indexFrom)
-      movingCards.forEach(movingCard => movingCard.pile = card.pile)
-      targetPile.push(...movingCards)
-
-      this.checkSortedSuit(targetPile)
-
-      this.deselectCards()
-
-      // reverse last card in the pile
-      if (selectedPile.length > 0) {
-        selectedPile[selectedPile.length - 1].reversed = false
-      }
-      else { // if moved card was the last one on the pile
-        this.createEmptyCard(selectedPile)
-      }
-
-      // increase moves
-      this.moves++;
-
-      // play move audio
-      let moveSound = new Audio('audio/move.mp3');
-			moveSound.play();
     },
 
     startTimer() {  
-      // increase minutes
-      if(this.time.seconds === 60) {
-        this.time.minutes++
-        this.time.seconds = '00'
+      try {
+        // increase minutes
+        if(this.time.seconds === 60) {
+          this.time.minutes++
+          this.time.seconds = '00'
 
-        // reduce score
-        if(this.score > 0){
-          this.score = this.score - 6
+          // reduce the score 60 points for every passing minute
+          if (this.score > 60) {
+            this.score -= 60
+          } else {
+            this.score = 0
+          }
         }
-      }
-      // increase hours
-      if(this.time.minutes === 60) {
-        this.time.hours++
-        this.time.minutes = '00'
-      }
-      // increase seconds
-      this.timer = setTimeout(() => {
-                      this.time.seconds++
-                      this.startTimer()
-                    }, 1000)
+        // increase hours
+        if(this.time.minutes === 60) {
+          this.time.hours++
+          this.time.minutes = '00'
+        }
+        // increase seconds
+        this.timer = setTimeout(() => {
+                        this.time.seconds++
+                        this.startTimer()
+                      }, 1000)
 
-      // set seconds format
-      if(this.time.seconds < 10) {
-        this.time.seconds = '0' + Number(this.time.seconds)
-      }
-      // set minutes format
-      if(this.time.minutes < 10) {
-        this.time.minutes = '0' + Number(this.time.minutes)
-      }
-      // set hours format
-      if(this.time.hours < 10) {
-        this.time.hours = '0' + Number(this.time.hours)
+        // set seconds format
+        if(this.time.seconds < 10) {
+          this.time.seconds = '0' + Number(this.time.seconds)
+        }
+        // set minutes format
+        if(this.time.minutes < 10) {
+          this.time.minutes = '0' + Number(this.time.minutes)
+        }
+        // set hours format
+        if(this.time.hours < 10) {
+          this.time.hours = '0' + Number(this.time.hours)
+        }
+      } catch (err) {
+        console.log(err.message)
       }
     },
 
@@ -425,20 +462,63 @@ export default {
     },
 
     resetTimer(){
-      this.time.seconds = '00'
-      this.time.minutes = '00'
-      this.time.hours = '00'
-      clearTimeout(this.timer);
+      try {
+        this.time.seconds = '00'
+        this.time.minutes = '00'
+        this.time.hours = '00'
+        clearTimeout(this.timer);
+      } catch (err) {
+        console.log(err.message)
+      }
     },
 
     checkWin () {
-      // check if all cards has sorted
-      if (this.sortedSuits === this.pilesToSort) {
-        this.showWinModal = true // show win modal
-        this.stopTimer() //stop timer
-        this.highestScore = this.score > this.highestScore ? this.score : this.highestScore
+      try {
+        // check if all cards has sorted
+        if (this.sortedSuits === this.pilesToSort) {
+          this.showWinModal = true // show win modal
+          this.stopTimer() //stop timer
+          this.highestScore = this.score > this.highestScore ? this.score : this.highestScore
+        }
+      } catch (err) {
+        console.log(err.message)
+      }
+    },
+
+    hint () {
+      try {
+        // set movable cards (last cards in piles)
+        this.piles.forEach(pile => {
+            this.movableCards.push(pile[pile.length - 1])
+        })
+
+        // set possible moves 
+        this.movableCards.forEach( firstCard => {
+          this.movableCards.forEach(secondCard => {
+            if ( firstCard.value === secondCard.value + 1 ) {
+              this.possibleMoves.push([firstCard, secondCard])
+            }
+          })
+        }) 
+
+        // select the cards for 500 ms to show possible moves from possibleMoves array
+        this.possibleMoves[this.hintIterator].forEach(card => card.selected = true)
+
+        setTimeout(() => {
+        this.possibleMoves[this.hintIterator].forEach(card => card.selected = false)
+          
+          // change iterate hints for every click
+          if(this.hintIterator < this.possibleMoves.length){
+            this.hintIterator++;
+          }else{
+            this.hintIterator = 0;
+          }
+        }, 500)
+      } catch (e) {
+      console.log(e.message)
       }
     }
+
   },
 }
 </script>
