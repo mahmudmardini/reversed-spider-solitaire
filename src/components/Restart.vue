@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div class="restart" @click="restart();">
+  <div class="restart" @click="restart()">
 
     <!-- restart icon -->
     <img src="images/restart.png" />

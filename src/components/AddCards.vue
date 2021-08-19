@@ -76,7 +76,7 @@ export default {
             duration : 5000
           })
           // eslint-disable-next-line
-          console.log('a new error catched: ' + err)
+          console.log('error: ' + err)
         return
       }
     },
