@@ -3,7 +3,12 @@
   <div class="toprow">
       
       <!-- add cards component -->
-      <AddCards :cards="cards" :piles="piles" @checkSortedSuit="checkSortedSuit" />
+      <AddCards 
+      :cards="cards" 
+      :piles="piles" 
+      @checkSortedSuit="checkSortedSuit" 
+      @resetHintValues="resetHintValues" 
+      />
         
         <div class="sorted-piles">
             
@@ -42,9 +47,15 @@ export default {
     },
 
     methods: {
+
         checkSortedSuit(){
             this.$emit('checkSortedSuit', 'pile')
+        },
+        
+        resetHintValues(){
+            this.$emit('resetHintValues')
         }
+
     }
 
 }

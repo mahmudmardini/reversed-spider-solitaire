@@ -42,6 +42,10 @@ export default {
         this.$emit('checkSortedSuit', 'pile')
     },
 
+    resetHintValues(){
+        this.$emit('resetHintValues')
+    },
+
     addCards () {
       try {
 
@@ -64,6 +68,8 @@ export default {
         // check if a full correct suit has formed
         this.checkSortedSuit(pile)
       })
+
+      this.resetHintValues()
       
       // play card sound
       let cardSound = new Audio('audio/card.mp3')
@@ -76,7 +82,7 @@ export default {
             duration : 5000
           })
           // eslint-disable-next-line
-          console.log('error: ' + err)
+          console.log('error: ' + err.message)
         return
       }
     },

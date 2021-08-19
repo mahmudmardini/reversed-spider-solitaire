@@ -9,6 +9,7 @@
     <TopRow
     :cards="cards" 
     :piles="piles"
+    @resetHintValues="resetHintValues"
     />
 
     <div class="piles">
@@ -165,9 +166,7 @@ export default {
       this.score = 500
       this.moves = 0
       this.resetTimer()
-      this.movableCards = []
-      this.possibleMoves = []
-      this.hintIterator = 0
+      this.resetHintValues()
       
       // hide sorted piles cards
       let sortedPileCards = document.querySelectorAll('.sorted-pile-card')
@@ -403,9 +402,7 @@ export default {
         this.moves++;
 
         // reset hint values
-        this.movableCards = []
-        this.possibleMoves = []
-        this.hintIterator = 0
+        this.resetHintValues()
 
         // play move audio
         let moveSound = new Audio('audio/move.mp3');
@@ -501,22 +498,42 @@ export default {
           })
         }) 
 
-        // select the cards for 500 ms to show possible moves from possibleMoves array
-        this.possibleMoves[this.hintIterator].forEach(card => card.selected = true)
+        if (this.possibleMoves.length > 0) {
+          // select the cards for 500 ms to show possible moves from possibleMoves array
+          this.possibleMoves[this.hintIterator].forEach(card => card.selected = true)
 
-        setTimeout(() => {
-        this.possibleMoves[this.hintIterator].forEach(card => card.selected = false)
+          setTimeout(() => {
+          this.possibleMoves[this.hintIterator].forEach(card => card.selected = false)
+            
+            // change iterate hints for every click
+            if(this.hintIterator < this.possibleMoves.length){
+              this.hintIterator++;
+            }else{
+              this.hintIterator = 0;
+            }
+          }, 500)
           
-          // change iterate hints for every click
-          if(this.hintIterator < this.possibleMoves.length){
-            this.hintIterator++;
-          }else{
-            this.hintIterator = 0;
+          // play hint audio
+          let hintSound = new Audio('audio/hint.mp3')
+          hintSound.play()
+
+        } else {
+            this.$toasted.show('There is no possible moves, try to add cards', { 
+              theme: "toasted-primary", 
+              position: "top-right", 
+              duration : 5000
+            })
           }
-        }, 500)
+        
       } catch (e) {
       console.log(e.message)
       }
+    },
+
+    resetHintValues () {
+      this.movableCards = []
+      this.possibleMoves = []
+      this.hintIterator = 0
     }
 
   },
