@@ -3,22 +3,30 @@ import { shallowMount } from "@vue/test-utils";
 import Actions from '@/views/Actions'
 import NewGame from '@/components/NewGame'
 import Restart from '@/components/Restart'
+import Hint from '@/components/Hint'
 
 describe('test game action buttons', () => {
   
-  const wrapper = mount(Actions)
+  const actionsWrapper = mount(Actions)
 
-  wrapper.findComponent(Restart).vm.restart()
-  wrapper.findComponent(NewGame).vm.$emit('setStartModal', true)
-  shallowMount(NewGame).setData({showStartModal: true})
+  actionsWrapper.findComponent(Restart).vm.restart()
+  actionsWrapper.findComponent(NewGame).vm.$emit('setStartModal', true)
+  actionsWrapper.findComponent(Hint).vm.hint()
+
+  mount(NewGame).setData({showStartModal: true})
 
   test('should contain new game button', () => {
-    expect(wrapper.getComponent(NewGame).text()).toContain('New Game')
+    expect(actionsWrapper.findComponent(NewGame).text()).toContain('New Game')
   })
   
   
   test('should contain restart button', () => {
-    expect(wrapper.getComponent(Restart).text()).toContain('Restart')
+    expect(actionsWrapper.getComponent(Restart).text()).toContain('Restart')
+  })
+  
+  
+  test('should contain hint button', () => {
+    expect(actionsWrapper.findComponent(Hint).text()).toContain('Hint')
   })
   
 })
