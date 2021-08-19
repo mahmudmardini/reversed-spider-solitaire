@@ -23,7 +23,10 @@ export default {
   },
 
   props: {
-    pile: { type: Array, required: true }
+    pile: { 
+      type: Array, 
+      required: true 
+    }
   },
 
   data () {
