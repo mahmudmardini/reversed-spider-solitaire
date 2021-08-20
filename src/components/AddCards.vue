@@ -69,6 +69,7 @@ export default {
           this.checkSortedSuit(pile)
         })
 
+        this.deselectCards()
         this.resetHintValues()
         
         // play card sound
@@ -86,6 +87,10 @@ export default {
         return
       }
     },
+        
+      deselectCards(){
+          this.$emit('deselectCards')
+      }
 
   }
 

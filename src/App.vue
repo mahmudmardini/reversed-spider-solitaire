@@ -9,6 +9,7 @@
     <TopRow
     :cards="cards" 
     :piles="piles"
+    @deselectCards="deselectCards"
     @resetHintValues="resetHintValues"
     />
 

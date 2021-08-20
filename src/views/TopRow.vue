@@ -7,6 +7,7 @@
       :cards="cards" 
       :piles="piles" 
       @checkSortedSuit="checkSortedSuit" 
+      @deselectCards="deselectCards" 
       @resetHintValues="resetHintValues" 
       />
         
@@ -54,6 +55,10 @@ export default {
         
         resetHintValues(){
             this.$emit('resetHintValues')
+        },
+        
+        deselectCards(){
+            this.$emit('deselectCards')
         }
 
     }
