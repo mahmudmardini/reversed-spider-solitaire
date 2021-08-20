@@ -419,9 +419,9 @@ export default {
           this.time.minutes++
           this.time.seconds = '00'
 
-          // reduce the score 60 points for every passing minute
-          if (this.score > 60) {
-            this.score -= 60
+          // reduce the score 10 points for every passing minute
+          if (this.score > 10) {
+            this.score -= 10
           } else {
             this.score = 0
           }
