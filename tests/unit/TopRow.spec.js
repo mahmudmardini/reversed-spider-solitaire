@@ -1,6 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import TopRow from '@/views/TopRow'
 import AddCards from '@/components/AddCards'
+import App from '@/App'
 
 describe('test top row section and its components', () => {
   
@@ -25,6 +26,13 @@ describe('test top row section and its components', () => {
 
   test('should contain A card', () => {
     expect(topRowComponent.text()).toContain('A')
+  })
+
+  
+  const AppWrapper = shallowMount(App)
+  topRowComponent.vm.resetHintValues()
+  test('should contain A card', () => {
+    expect(AppWrapper.vm.hintIterator).toBe(0)
   })
   
 })
