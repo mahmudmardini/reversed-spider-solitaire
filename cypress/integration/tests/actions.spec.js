@@ -24,6 +24,12 @@ describe('actions-tests', () => {
         cy.get('.actions').find('.restart').find('img').should('have.attr', 'src').should('include','restart')
     })
 
+    it('should find hint button with its icon', () => {
+        cy.get('.actions').find('.hint').should('exist')
+        cy.get('.actions').find('.hint').find('button').contains('Hint')
+        cy.get('.actions').find('.hint').find('img').should('have.attr', 'src').should('include','hint')
+    })
+
     it('should restart the game', () => {
         cy.get('.button--newGame').click()
         cy.wait(2000)
@@ -38,6 +44,13 @@ describe('actions-tests', () => {
         cy.get('.timer').find('label').contains('00:00:02')
         cy.get('.new-game').click()
         cy.get('.modal__mask').should('exist')
+    })
+
+    it('should select two movable cards', () => {
+        cy.get('.button--newGame').click()
+        cy.get('.selected').should('not.exist')
+        cy.get('.hint').click()
+        cy.get('.card--selected').should('exist')
     })
     
 })
