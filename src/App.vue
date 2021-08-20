@@ -290,7 +290,7 @@ export default {
           sortedPileCard.style.visibility = 'visible'
 
           // play sorted suit sound
-          let sortedSuitSound = new Audio('audio/sorted-suit.ogg')
+          let sortedSuitSound = new Audio('audio/sorted-suit.wav')
           sortedSuitSound.play();
 
           this.checkWin()
