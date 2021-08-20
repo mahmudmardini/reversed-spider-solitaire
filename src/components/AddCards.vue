@@ -72,7 +72,7 @@ export default {
       this.resetHintValues()
       
       // play card sound
-      let cardSound = new Audio('audio/card.mp3')
+      let cardSound = new Audio('audio/deal.mp3')
       cardSound.play()    
 
       } catch (err) {
