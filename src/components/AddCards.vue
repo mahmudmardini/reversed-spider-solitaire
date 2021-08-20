@@ -49,31 +49,31 @@ export default {
     addCards () {
       try {
 
-      if (this.cards.length === 0) throw 'There is no cards to add.'
+        if (this.cards.length === 0) throw 'There is no cards to add.'
 
-      // check if an empty pile exists
-      const isEmptyCard = this.piles.some(pile => pile[0].empty)
+        // check if an empty pile exists
+        const isEmptyCard = this.piles.some(pile => pile[0].empty)
 
-      // catch error and show warinig message using vue toasted library
-      if(isEmptyCard) throw 'Cannot send cards to an empty pile, please fill all piles and try again.'
+        // catch error and show warinig message using vue toasted library
+        if(isEmptyCard) throw 'Cannot send cards to an empty pile, please fill all piles and try again.'
 
-      // deal cards to each pile 
-      this.piles.forEach((pile, pileIndex) => {
-        const card = this.cards.pop()
-        card.pile = pileIndex
-        card.reversed = false
+        // deal cards to each pile 
+        this.piles.forEach((pile, pileIndex) => {
+          const card = this.cards.pop()
+          card.pile = pileIndex
+          card.reversed = false
+          
+          pile.push(card)			  
+
+          // check if a full correct suit has formed
+          this.checkSortedSuit(pile)
+        })
+
+        this.resetHintValues()
         
-        pile.push(card)			  
-
-        // check if a full correct suit has formed
-        this.checkSortedSuit(pile)
-      })
-
-      this.resetHintValues()
-      
-      // play card sound
-      let cardSound = new Audio('audio/deal.mp3')
-      cardSound.play()    
+        // play card sound
+        let dealSound = new Audio('audio/deal.mp3')
+        dealSound.play()    
 
       } catch (err) {
           this.$toasted.show(err, { 
