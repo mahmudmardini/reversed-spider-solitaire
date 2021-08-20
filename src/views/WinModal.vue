@@ -17,17 +17,12 @@
           </div>
 
           <div class="modal__body">
-            <p name="body">
-              You have won this game! 🤩 
-              <br>
-              Time: {{gameTime.hours}}:{{gameTime.minutes}}:{{gameTime.seconds}} 
-              <br>
-              Moves: {{moves}} 
-              <br>
-              Score: {{score}} 
-              <br>
-              Highest Score: {{highestScore}} 
-            </p>
+              <p> You have won this game! 🤩</p> 
+              <p> Time: {{gameTime.hours}}:{{gameTime.minutes}}:{{gameTime.seconds}} </p>
+              <p> Moves: {{moves}}</p>
+              <p> Score: {{score}}</p>
+              <p v-if="score >= highestScore"> You got the highest score ever! </p>
+              <p v-else> Highest Score: {{highestScore}} </p>
           </div>
 
           <div class="modal__footer">
