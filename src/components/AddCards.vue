@@ -55,7 +55,7 @@ export default {
         const isEmptyCard = this.piles.some(pile => pile[0].empty)
 
         // catch error and show warinig message using vue toasted library
-        if(isEmptyCard) throw 'Cannot send cards to an empty pile, please fill all piles and try again.'
+        if(isEmptyCard) throw 'Cannot add cards to an empty pile, please fill all piles and try again.'
 
         // deal cards to each pile 
         this.piles.forEach((pile, pileIndex) => {

@@ -519,9 +519,11 @@ export default {
           hintSound.play()
 
         } else {
-            this.$toasted.show('There is no possible moves, try to add cards', { 
-              theme: "toasted-primary", 
-              position: "top-right", 
+          const isThereCardsToAdd = (this.cards.length / this.piles.length) > 0 ? true : false
+          const suggestion = isThereCardsToAdd ? 'add cards and try again' : 'maybe you should restart the game 😕'
+            this.$toasted.show(`There is no possible moves, ${suggestion}`, { 
+              theme: 'toasted-primary', 
+              position: 'top-right', 
               duration : 5000
             })
           }
