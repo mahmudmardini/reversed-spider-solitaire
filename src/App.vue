@@ -358,7 +358,6 @@ export default {
 
     moveCards(card){
       try {
-        this.checkWin() // todo: delete
         const targetPile = this.piles[card.pile]
         const selectedPile = this.piles[this.selectedCards[0].pile]
 
@@ -471,7 +470,6 @@ export default {
 
     checkWin () {
       try {
-        this.showWinModal = true // todo: delete
         // check if all cards has sorted
         if (this.sortedSuits === this.pilesToSort) {
           this.showWinModal = true // show win modal
