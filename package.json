@@ -1,6 +1,9 @@
 {
   "name": "reversed-spider-solitaire-game",
   "version": "0.1.0",
+  "engines": {
+    "node": "12.14.0"
+  },
   "private": true,
   "author": "Mahmud Mardini <m.mardini152@gmail.com>",
   "scripts": {
