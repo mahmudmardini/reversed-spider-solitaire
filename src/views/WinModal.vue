@@ -17,10 +17,11 @@
           </div>
 
           <div class="modal__body">
-              <p> You have won this game! 🤩</p> 
+              <p> You have won this game! 🤩</p>
               <p> Time: {{gameTime.hours}}:{{gameTime.minutes}}:{{gameTime.seconds}} </p>
               <p> Moves: {{moves}}</p>
-              <p> Score: {{score}}</p>
+              <p> Your score: {{score}}</p>
+              <p v-if="score >= highestScore"> Old highest score: {{oldHighestScore}} </p>
               <p v-if="score >= highestScore"> You got the highest score ever! </p>
               <p v-else> Highest Score: {{highestScore}} </p>
           </div>
@@ -48,13 +49,44 @@ export default {
   props: {
     gameTime: Object,
     moves: Number,
-    score: Number,
-    highestScore: Number
+    score: Number
+  },
+
+  data () {
+    return {
+      highestScore: 0,
+      oldHighestScore: 0
+    }
   },
 
   created () {
         let winSound = new Audio('audio/win.mp3');
 				winSound.play();
+
+    this.getHighestScore().then( (response) => {
+      this.highestScore = this.oldHighestScore = response.data;
+
+      if(this.score >= this.highestScore){
+        this.updateHighestScore(this.score);
+      }
+    })
+
+  },
+
+  methods: {
+
+    updateHighestScore (score) {this.$http.get('https://mahmudmardini.bartinrehberi.info/projects/reversed-spider-solitaire/services/updateScore.php?highestScore='+score)
+        .then(function () {
+          // handle success
+        })
+        .catch(function (error) {
+          alert(error);
+        });
+    },
+
+     getHighestScore () {
+      return this.$http.get('https://mahmudmardini.bartinrehberi.info/projects/reversed-spider-solitaire/services/getScore.php')
+    },
   }
 
 }

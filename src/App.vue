@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    
-    <Header 
+
+    <Header
       :time="time"
       :score="score"
       :moves="moves"
     />
     <TopRow
-    :cards="cards" 
+    :cards="cards"
     :piles="piles"
     @deselectCards="deselectCards"
     @resetHintValues="resetHintValues"
@@ -27,7 +27,6 @@
       :gameTime="time"
       :moves="moves"
       :score="score"
-      :highestScore="highestScore"
       @close="showWinModal = false"
       @newGame="clearData(); createCards()"
     />
@@ -102,7 +101,6 @@ export default {
         seconds: '30'
       },
       score: 500,
-      highestScore: 500,
       moves: 0,
       showStartModal: true,
       showWinModal: false
@@ -155,7 +153,7 @@ export default {
         pile[lastIndex].reversed = false
       })
 
-    // start the timer 
+    // start the timer
     this.startTimer()
     },
 
@@ -168,7 +166,7 @@ export default {
       this.moves = 0
       this.resetTimer()
       this.resetHintValues()
-      
+
       // hide sorted piles cards
       let sortedPileCards = document.querySelectorAll('.sorted-pile-card')
       sortedPileCards.forEach(card => {
@@ -192,7 +190,7 @@ export default {
 
     createEmptyCard (pile) {
       try {
-        if ( !(pile >= 0 && pile < 10) ) throw 'pile number is out if the range' 
+        if ( !(pile >= 0 && pile < 10) ) throw 'pile number is out if the range'
 
         pile.push({
           pile: this.piles.indexOf(pile),
@@ -218,7 +216,7 @@ export default {
       const firstValue = cards[0].value
       const cardsValues = cards.map(card => card.value)
       const areVlauesCorrect = cardsValues.every((value, index) => {
-        return value === firstValue + index 
+        return value === firstValue + index
       })
 
       return areSuitsCorrect && areVlauesCorrect
@@ -239,7 +237,7 @@ export default {
             currentPileSuits.push(card.suit)
           }
         })
-        
+
         // return false if current sorted pile length is less than 13
         if (pileLength < this.cardsInSuit) {
           return false
@@ -263,7 +261,7 @@ export default {
         }
 
         if (correctValues === this.cardsInSuit - 1) { // cards in good order
-          
+
           // set sorted pile symbols
           for(let i = 0; i < this.symbolsInCard; i++){
             let sortedSuitSymbol = document.querySelectorAll('.sorted-suit-symbol')[this.sortedSuitSymbols]
@@ -321,7 +319,7 @@ export default {
         }
 
         if (!isAnyCardSelected) {
-            
+
             // set current pile
             const currentPile = this.piles[card.pile]
 
@@ -343,7 +341,7 @@ export default {
             }
 
         } else { // if there is selected card
-          
+
           // deselect card if click on earlier selected card
           if (card.selected) {
             this.deselectCards()
@@ -360,13 +358,14 @@ export default {
 
     moveCards(card){
       try {
+        this.checkWin() // todo: delete
         const targetPile = this.piles[card.pile]
         const selectedPile = this.piles[this.selectedCards[0].pile]
 
-        const lastCardInTargetPile = targetPile[targetPile.length - 1]; 
+        const lastCardInTargetPile = targetPile[targetPile.length - 1];
 
         // check last card in target pile
-        if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) { 
+        if ( lastCardInTargetPile.value + 1 !== this.selectedCards[0].value && !card.empty) {
           this.deselectCards()
           this.onCardSelect (card)
           return false
@@ -413,7 +412,7 @@ export default {
       }
     },
 
-    startTimer() {  
+    startTimer() {
       try {
         // increase minutes
         if(this.time.seconds === 60) {
@@ -472,11 +471,12 @@ export default {
 
     checkWin () {
       try {
+        this.showWinModal = true // todo: delete
         // check if all cards has sorted
         if (this.sortedSuits === this.pilesToSort) {
           this.showWinModal = true // show win modal
           this.stopTimer() //stop timer
-          this.highestScore = this.score > this.highestScore ? this.score : this.highestScore
+          // this.highestScore = this.score > this.highestScore ? this.score : this.highestScore
         }
       } catch (err) {
         console.log(err.message)
@@ -490,14 +490,14 @@ export default {
             this.movableCards.push(pile[pile.length - 1])
         })
 
-        // set possible moves 
+        // set possible moves
         this.movableCards.forEach( firstCard => {
           this.movableCards.forEach(secondCard => {
             if ( firstCard.value === secondCard.value + 1 ) {
               this.possibleMoves.push([firstCard, secondCard])
             }
           })
-        }) 
+        })
 
         if (this.possibleMoves.length > 0) {
           // select the cards for 500 ms to show possible moves from possibleMoves array
@@ -505,7 +505,7 @@ export default {
 
           setTimeout(() => {
           this.possibleMoves[this.hintIterator].forEach(card => card.selected = false)
-            
+
             // change iterate hints for every click
             if(this.hintIterator < this.possibleMoves.length){
               this.hintIterator++;
@@ -513,7 +513,7 @@ export default {
               this.hintIterator = 0;
             }
           }, 500)
-          
+
           // play hint audio
           let hintSound = new Audio('audio/hint.mp3')
           hintSound.play()
@@ -521,13 +521,13 @@ export default {
         } else {
           const isThereCardsToAdd = (this.cards.length / this.piles.length) > 0 ? true : false
           const suggestion = isThereCardsToAdd ? 'add cards and try again' : 'maybe you should restart the game 😕'
-            this.$toasted.show(`There is no possible moves, ${suggestion}`, { 
-              theme: 'toasted-primary', 
-              position: 'top-right', 
+            this.$toasted.show(`There is no possible moves, ${suggestion}`, {
+              theme: 'toasted-primary',
+              position: 'top-right',
               duration : 5000
             })
           }
-        
+
       } catch (e) {
       console.log(e.message)
       }
