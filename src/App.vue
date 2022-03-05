@@ -41,6 +41,7 @@
 
     <Actions
       :startModalValue="showStartModal" @setStartModal="showStartModal = $event"
+      :isPaused="isPaused" @pauseGame="pauseGame"
       @restart="clearData(); createCards();"
       @hint="hint()"
     />
@@ -103,7 +104,8 @@ export default {
       score: 500,
       moves: 0,
       showStartModal: true,
-      showWinModal: false
+      showWinModal: false,
+      isPaused: false
     }
   },
 
@@ -535,6 +537,15 @@ export default {
       this.movableCards = []
       this.possibleMoves = []
       this.hintIterator = 0
+    },
+
+    pauseGame () {
+      this.isPaused = !this.isPaused
+      if(this.isPaused) {
+        this.stopTimer()
+      } else {
+        this.startTimer()
+      }
     }
 
   },

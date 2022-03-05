@@ -4,6 +4,9 @@
       <!-- hint button -->
       <Hint @hint="hint()" />
 
+      <!-- pause button -->
+      <Pause :isPaused="isPaused" @pauseGame="pauseGame" />
+
       <!-- restart button -->
       <Restart @restart="restart()" />
 
@@ -15,6 +18,7 @@
 
 <script>
 import NewGame from '@/components/NewGame'
+import Pause from '@/components/Pause'
 import Restart from '@/components/Restart'
 import Hint from '@/components/Hint'
 import '@/styles/actions.scss'
@@ -25,15 +29,18 @@ export default {
 
   components: {
     NewGame,
+    Pause,
     Restart,
     Hint
   },
 
   props: {
-    startModalValue: Boolean
+    startModalValue: Boolean,
+    isPaused: Boolean,
   },
   
   computed: {
+
     showStartModal: {
         get() {
           return this.startModalValue;
@@ -42,6 +49,7 @@ export default {
           this.$emit('setStartModal', startModalValue);
         }
     }
+
   },
 
   methods: {
@@ -52,6 +60,10 @@ export default {
 
     hint(){
         this.$emit('hint')
+    },
+
+    pauseGame(){
+        this.$emit('pauseGame')
     }
 
   }
