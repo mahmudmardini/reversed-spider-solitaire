@@ -39,6 +39,11 @@
       :levelValue="selectedLevel" @setLevelValue="selectedLevel = $event"
     />
 
+    <ResumeModal
+      v-if="isPaused"
+      @resume="resumeGame()"
+    />
+
     <Actions
       :startModalValue="showStartModal" @setStartModal="showStartModal = $event"
       :isPaused="isPaused" @pauseGame="pauseGame"
@@ -59,6 +64,7 @@ import Header from '@/views/Header'
 import Pile from '@/components/Pile'
 import WinModal from '@/views/WinModal'
 import StartModal from '@/views/StartModal'
+import ResumeModal from '@/views/ResumeModal'
 import Actions from '@/views/Actions'
 
 // import styles
@@ -77,6 +83,7 @@ export default {
     Pile,
     WinModal,
     StartModal,
+    ResumeModal,
     Actions
   },
 
@@ -540,12 +547,13 @@ export default {
     },
 
     pauseGame () {
-      this.isPaused = !this.isPaused
-      if(this.isPaused) {
-        this.stopTimer()
-      } else {
-        this.startTimer()
-      }
+      this.isPaused = true
+      this.stopTimer()
+    },
+
+    resumeGame () {
+      this.isPaused = false
+      this.startTimer()
     }
 
   },
