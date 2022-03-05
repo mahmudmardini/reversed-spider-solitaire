@@ -6,17 +6,23 @@
 
           <div class="modal__header">
             <h1 class="modal__title">
-              Game Paused!
+              Are you sure?
             </h1>
           </div>
 
           <div class="modal__footer">
             <slot name="footer">
               <button
-                @click="resume()"
-                class="modal__button button button--resume"
+                @click="restart()"
+                class="modal__button button button--confirm"
                 type="button">
-                Resume!
+                Yes
+              </button>
+              <button
+                @click="cancel()"
+                class="modal__button button button--cancel"
+                type="button">
+                Cancel
               </button>
             </slot>
           </div>
@@ -31,11 +37,15 @@
 
 export default {
   
-  name: "ResumeModal",
+  name: "RestartModal",
 
     methods: {
-        resume () {
-            this.$emit('resume')
+        restart () {
+            this.$emit('restart')
+        },
+
+        cancel () {
+            this.$emit('cancel')
         }
     }
 

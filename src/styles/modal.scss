@@ -58,12 +58,22 @@
       }
     }
 
-    &--newGame {
+    &--newGame, &--resume, &--confirm {
       background-color: #ffe272;
       border: 2px solid #fbcd00;
       padding: 10px 22px;
       &:hover {
         background-color: #fbcd00;
+      }
+    }
+
+    &--cancel {
+      background-color: #0985c533;
+      border: 2px solid #0985c545;
+      padding: 10px 22px;
+      margin-left: 10%;
+      &:hover {
+        background-color: #0985c545;
       }
     }
 

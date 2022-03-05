@@ -44,10 +44,16 @@
       @resume="resumeGame()"
     />
 
+    <RestartModal
+      v-if="showRestartModal"
+      @restart="restart()"
+      @cancel="cancelRestart();"
+    />
+
     <Actions
       :startModalValue="showStartModal" @setStartModal="showStartModal = $event"
       :isPaused="isPaused" @pauseGame="pauseGame"
-      @restart="clearData(); createCards();"
+      @restart="onRestart()"
       @hint="hint()"
     />
   </div>
@@ -65,6 +71,7 @@ import Pile from '@/components/Pile'
 import WinModal from '@/views/WinModal'
 import StartModal from '@/views/StartModal'
 import ResumeModal from '@/views/ResumeModal'
+import RestartModal from '@/views/RestartModal'
 import Actions from '@/views/Actions'
 
 // import styles
@@ -84,6 +91,7 @@ export default {
     WinModal,
     StartModal,
     ResumeModal,
+    RestartModal,
     Actions
   },
 
@@ -112,7 +120,8 @@ export default {
       moves: 0,
       showStartModal: true,
       showWinModal: false,
-      isPaused: false
+      isPaused: false,
+      showRestartModal: false
     }
   },
 
@@ -554,6 +563,22 @@ export default {
     resumeGame () {
       this.isPaused = false
       this.startTimer()
+    },
+
+    cancelRestart () {
+      this.startTimer()
+      this.showRestartModal = false
+    },
+
+    restart () {
+      this.clearData()
+      this.createCards()
+      this.showRestartModal = false
+    },
+
+    onRestart () {
+      this.stopTimer()
+      this.showRestartModal = true
     }
 
   },
