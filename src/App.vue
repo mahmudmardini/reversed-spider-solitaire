@@ -577,8 +577,13 @@ export default {
     },
 
     onRestart () {
-      this.stopTimer()
-      this.showRestartModal = true
+      if (this.time.minutes < 2) {
+        this.restart()
+      } 
+      else {
+        this.stopTimer()
+        this.showRestartModal = true
+      }
     }
 
   },
