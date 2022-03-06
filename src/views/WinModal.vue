@@ -8,12 +8,12 @@
             <h3 class="modal__title">
               Congratulations!
             </h3>
-            <button
+            <!-- <button
               type="button"
               class="modal__button button button--exit"
               @click="$emit('close')">
                 x
-            </button>
+            </button> -->
           </div>
 
           <div class="modal__body">
