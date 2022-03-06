@@ -6,7 +6,9 @@
 
       <Moves :moves="moves" />
 
-      <Score :score="score"/>
+      <Score :score="score" />
+
+      <HighestScore />
 
     </section>
     
@@ -16,6 +18,7 @@
 import Timer from '@/components/Timer'
 import Moves from '@/components/Moves'
 import Score from '@/components/Score'
+import HighestScore from '@/components/HighestScore'
 import '@/styles/header.scss'
 
 export default {
@@ -25,7 +28,8 @@ export default {
   components: {
     Timer,
     Moves,
-    Score
+    Score,
+    HighestScore
   },
 
   props:
