@@ -1,8 +1,8 @@
 # Reversed Spider Solitaire
 
-[Reversed Spider Solitaire](https://reversed-spider-solitaire-game.herokuapp.com/) It's a simple remake of classic Spider Solitaire Game built as the final project of Trendyol Front-End Bootcamp. 
+[Reversed Spider Solitaire](https://mahmudmardini.com/projects/reversed-spider-solitaire/) It's a simple remake of the classic Spider Solitaire Game built as the final project of Trendyol Front-End Bootcamp. 
 
-[![Game Demo](preview/game-preview.png)](https://reversed-spider-solitaire-game.herokuapp.com/)
+[![Game Demo](preview/game-preview.png)](https://mahmudmardini.com/projects/reversed-spider-solitaire/)
 
 
 ## Content
@@ -108,6 +108,6 @@ This application is integrated and deployed automatically using [Heroku](https:/
 
 ## Links
 
-- [Play now!](https://reversed-spider-solitaire-game.herokuapp.com/)
+- [Play now!](https://mahmudmardini.com/projects/reversed-spider-solitaire/)
 - [Source code](https://github.com/mahmudmardini/reversed-spider-solitaire-mahmud-mardini)
 
